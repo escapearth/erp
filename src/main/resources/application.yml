@@ -1,0 +1,13 @@
+## Server Port
+server:
+  port: 8888
+  error:
+    whitelabel:
+      enabled: false
+
+spring:
+  security:
+    user:
+      name: test
+      password: 1234
+
