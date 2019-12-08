@@ -1,4 +1,4 @@
-package org.erp.serviec;
+package org.erp.service;
 
 import org.erp.model.common.CommonResult;
 import org.erp.model.common.ListResult;
