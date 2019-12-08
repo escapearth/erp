@@ -3,11 +3,34 @@ server:
   port: 8888
   error:
     whitelabel:
-      enabled: false
+      enabled: true
 
 spring:
   security:
     user:
       name: test
       password: 1234
+  h2:
+    console:
+      path: /h2-console
+      enabled: true
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+    show-sql: true
+
+######### LOGGING #########
+logging:
+  level:
+    org.erp: DEBUG
+
 
