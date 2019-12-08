@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.erp.model.UserModel;
 import org.erp.model.common.CommonResult;
 import org.erp.repository.UserRepository;
-import org.erp.serviec.ResponseService;
+import org.erp.service.ResponseService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
