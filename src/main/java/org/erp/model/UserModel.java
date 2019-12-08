@@ -56,7 +56,7 @@ public class UserModel extends CommonDateEntity implements UserDetails {
     }
 
     @OneToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "provider_id", referencedColumnName = "provider_id", nullable = false, updatable = false, unique = true)
+//    @JoinColumn(name = "provider_id", referencedColumnName = "provider_id", nullable = false, updatable = false, unique = true)
     private UserConnection social;
 
     public static UserModel signUp(UserConnection userConnection) {

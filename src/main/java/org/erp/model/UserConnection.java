@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.erp.model.social.SocialType;
 
 import javax.persistence.*;
 
@@ -15,18 +14,18 @@ import javax.persistence.*;
 public class UserConnection {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long msrl;
 
     @Column(name = "email")
     private String email;
 
-    @Column(name = "provider")
-    @Enumerated(EnumType.STRING)
-    private SocialType provider;
+//    @Column(name = "provider")
+//    @Enumerated(EnumType.STRING)
+//    private SocialType provider;
 
-    @Column(name = "provider_id", unique = true, nullable = false)
-    private String providerId;
+//    @Column(name = "provider_id", unique = true, nullable = false)
+//    private String providerId;
 
     @Column(name = "display_name")
     private String displayName;
@@ -45,10 +44,10 @@ public class UserConnection {
     private long expireTime;
 
     @Builder
-    private UserConnection(String email, SocialType provider, String providerId, String displayName, String profileUrl, String imageUrl, String accessToken, long expireTime) {
+    private UserConnection(String email, /* SocialType provider, String providerId,*/ String displayName, String profileUrl, String imageUrl, String accessToken, long expireTime) {
         this.email = email;
-        this.provider = provider;
-        this.providerId = providerId;
+//        this.provider = provider;
+//        this.providerId = providerId;
         this.displayName = displayName;
         this.profileUrl = profileUrl;
         this.imageUrl = imageUrl;
