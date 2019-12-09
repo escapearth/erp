@@ -1,5 +1,8 @@
 package org.erp.security;
 
+import lombok.RequiredArgsConstructor;
+import org.erp.jwt.JwtConfigure;
+import org.erp.jwt.JwtTokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -14,7 +17,10 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -69,4 +75,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/")
                 .permitAll();
     }
+
+    // Filter Logging
+    private JwtConfigure securityConfigurerAdapter() {
+        return new JwtConfigure(jwtTokenProvider);
+    }
+
 }
