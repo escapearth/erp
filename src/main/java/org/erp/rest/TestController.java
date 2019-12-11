@@ -10,6 +10,6 @@ public class TestController {
     @GetMapping("/")
     @ResponseBody
     public String test() {
-        return "test";
+        return "Main Page 입니다..!";
     }
 }
