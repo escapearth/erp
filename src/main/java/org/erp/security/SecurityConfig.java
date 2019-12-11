@@ -1,6 +1,7 @@
 package org.erp.security;
 
 import lombok.RequiredArgsConstructor;
+import org.erp.jwt.JwtAuthenticationFilter;
 import org.erp.jwt.JwtConfigure;
 import org.erp.jwt.JwtTokenProvider;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +14,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -21,6 +24,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenProvider jwtTokenProvider;
+//    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -46,10 +50,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     // Configure security settings
-
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtTokenProvider);
+
         http
                 .httpBasic().disable() // Rest API 이므로 기본설정을 안씀. 기본설정은 비인증시 Login 화면으로 Redirect
                 .csrf().disable() // Rest API 이므로 csrf 보안이 필요없음.
@@ -63,17 +67,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                 , "/*/signin/**"
                                 , "/sign/signup"
                                 , "/sign/signup/**"
+                                , "/sign/signout"
                                 , "/social/**")
                 .permitAll()
 
                 .and()
 
                 .logout()
+                .logoutUrl("/sign/signout")
+                .logoutSuccessUrl("/")
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/")
-                .permitAll();
+                .logoutRequestMatcher(new AntPathRequestMatcher("/sign/signout"))
+                .permitAll()
+
+                .and()
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
     }
 
     // Filter Logging
