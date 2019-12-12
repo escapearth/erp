@@ -1,6 +1,6 @@
 package org.erp.repository;
 
-import org.erp.model.UserModel;
+import org.erp.model.user.UserModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

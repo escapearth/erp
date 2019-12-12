@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.erp.exception.CustomEmailSigninFailedException;
 import org.erp.jwt.JwtTokenProvider;
-import org.erp.model.UserModel;
+import org.erp.model.user.UserModel;
 import org.erp.model.common.CommonResult;
 import org.erp.model.common.SingleResult;
 import org.erp.repository.UserRepository;

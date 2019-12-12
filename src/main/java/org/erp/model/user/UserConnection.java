@@ -1,4 +1,4 @@
-package org.erp.model;
+package org.erp.model.user;
 
 import lombok.AccessLevel;
 import lombok.Builder;
