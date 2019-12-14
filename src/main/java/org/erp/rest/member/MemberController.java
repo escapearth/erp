@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.erp.model.common.CommonResult;
+import org.erp.model.common.SingleResult;
 import org.erp.model.member.MemberModel;
 import org.erp.model.member.MemberStatusType;
 import org.erp.model.user.UserModel;
@@ -26,45 +27,29 @@ import java.util.Collections;
 public class MemberController {
 
     private final ResponseService responseService;
-    private final UserRepository userRepository;
-    private final MemberService memberService;
+    private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
     @ApiOperation(value = "조직원 추가", notes = "조직원 추가")
     @PostMapping(value = "/add")
-    public CommonResult addToMember (@ApiParam(value = "조직원 이메일 ", required = true)
+    public SingleResult<MemberModel> addToMember (@ApiParam(value = "조직원 이메일 ", required = true)
                                      @RequestParam String email,
                                      @ApiParam(value = "조직원 상태 ", required = true)
                                      @RequestParam MemberStatusType memberStatusType,
-                                     // TODO 추후 수정
-                                     @ApiParam(value = "uid ", required = true)
-                                     @RequestParam(value = "uid", defaultValue = "1") String uid,
-                                     @ApiParam(value = "비밀번호", required = true)
-                                     @RequestParam String password,
-                                     @ApiParam(value = "이름", required = true)
-                                     @RequestParam String name,
-                                     @ApiParam(value = "msrl", required = true)
-                                     @RequestParam(value = "msrl", defaultValue = "1") long msrl,
-                                     @ApiParam(value = "사용자 이메일", required = true)
-                                     @RequestParam String useremail
+                                                  @ApiParam(value = "msrl ", required = true)
+                                                      @RequestParam(value = "msrl", defaultValue = "1") long msrl,
+                                                  @ApiParam(value = "memberId", required = true)
+                                                      @RequestParam(value = "memberId", defaultValue = "1") long memberId
                                      ) {
 
-        MemberModel member = new MemberModel();
-        member.setMemberEmail(email);
-        member.setMemberStatus(memberStatusType);
+        MemberModel member = MemberModel.builder()
+                .memberEmail(email)
+                .memberStatus(memberStatusType)
+                .memberId(memberId)
+                // TODO 리팩토링필요 UserModel 연관관계
+                .userModel(UserModel.builder().msrl(msrl).email("emailtest").name("nametest").uid("uidtest").build())
+                .build();
 
-        userRepository.save(UserModel.builder()
-                .uid(uid)
-                .msrl(msrl)
-                .password(passwordEncoder.encode(password))
-                .name(name)
-                .email(useremail)
-                .roles(Collections.singletonList("ROLE_USER"))
-                .build());
-
-
-        log.debug("member : > " + member);
-        memberService.saveMemberModel(member);
-    return responseService.getSuccessResult();
+    return responseService.getSingleResult(memberRepository.save(member));
     }
 }

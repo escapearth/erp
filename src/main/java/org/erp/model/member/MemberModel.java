@@ -1,13 +1,11 @@
 package org.erp.model.member;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.erp.model.common.CommonDateEntity;
 import org.erp.model.user.UserModel;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
@@ -23,6 +21,8 @@ import javax.validation.constraints.Size;
 @Cacheable
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class MemberModel extends CommonDateEntity {
 
@@ -41,13 +41,13 @@ public class MemberModel extends CommonDateEntity {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false, nullable = false, unique = true, length = 36)
-    private Long memberId;
+//    @Column(updatable = false, nullable = false, unique = true)
+    private long memberId;
 
     /**
      * UserModel msrl
      */
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = false)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = false)
     @JoinColumn(name = "msrl", updatable = false, nullable = false)
     private UserModel userModel;
 

@@ -69,7 +69,6 @@ public class SignController {
         try {
             UserModel user = userRepository.findByUid(id).orElseThrow(CustomEmailSigninFailedException::new);
 
-            // User의 Password를 암호화했기 때문에 .matches를 사용하여 패스워드를 체크해준다.
             if (!passwordEncoder.matches(password, user.getPassword())) {
                 throw new CustomEmailSigninFailedException();
             }
