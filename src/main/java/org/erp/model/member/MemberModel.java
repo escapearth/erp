@@ -6,6 +6,7 @@ import org.erp.model.common.CommonDateEntity;
 import org.erp.model.user.UserModel;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
@@ -30,35 +31,21 @@ public class MemberModel extends CommonDateEntity {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Organization Id
-     */
-//    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-//    @JoinColumn(name = "organizationId", updatable = false, nullable = false)
-//    private OrganizationModel organizationModel;
-
-    /**
      * Member Id
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(updatable = false, nullable = false, unique = true)
-    private long memberId;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(columnDefinition = "CHAR(36)", updatable = false, nullable = false, unique = true, length = 36)
+    private String memberId;
 
     /**
-     * UserModel msrl
+     * UserModel
      */
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = false)
-    @JoinColumn(name = "msrl", updatable = false, nullable = false)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = false)
+    @JoinColumn(name = "userId", updatable = false)
     private UserModel userModel;
 
-    /**
-     * Member 직위/직책 정보
-     */
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinTable(name = "MemberJobTitle", //
-//            joinColumns = { @JoinColumn(name = "memberId") }, //
-//            inverseJoinColumns = { @JoinColumn(name = "jobTitleId") })
-//    private List<HcmJobTitleModel> jobTitleModels;
 
     /**
      * Member 성명
@@ -66,13 +53,6 @@ public class MemberModel extends CommonDateEntity {
     @Column(length = 255)
     private String memberName;
 
-    /**
-     * Member E-mail 주소의 최대 길이는 320 이다. 64 + @ + 255 = 320 (1 = @)
-     */
-    @NaturalId
-    @NotBlank
-    @Email
-    @Size(min = 6, max = 320)
     @Column(unique = true, nullable = false, length = 320)
     private String memberEmail;
 

@@ -49,7 +49,7 @@ public class SignController {
                                ) {
 
         userRepository.save(UserModel.builder()
-                .uid(id)
+                .uid(id) // userId or uid
                 .password(passwordEncoder.encode(password))
                 .name(name)
                 .email(email)
@@ -72,7 +72,7 @@ public class SignController {
             if (!passwordEncoder.matches(password, user.getPassword())) {
                 throw new CustomEmailSigninFailedException();
             }
-            return responseService.getSingleResult(jwtTokenProvider.createToken(String.valueOf(user.getMsrl()), user.getRoles()));
+            return responseService.getSingleResult(jwtTokenProvider.createToken(String.valueOf(user.getUserId()), user.getRoles()));
         } catch (AuthenticationException e) {
             throw new BadCredentialsException("Invalid username/password");
         }

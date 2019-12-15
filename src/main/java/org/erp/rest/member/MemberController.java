@@ -1,26 +1,24 @@
 package org.erp.rest.member;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import com.sun.xml.bind.v2.runtime.unmarshaller.XsiNilLoader;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.erp.model.common.CommonResult;
+import org.erp.exception.CustomMemberNotFoundException;
+import org.erp.model.common.ListResult;
 import org.erp.model.common.SingleResult;
 import org.erp.model.member.MemberModel;
 import org.erp.model.member.MemberStatusType;
 import org.erp.model.user.UserModel;
 import org.erp.repository.MemberRepository;
-import org.erp.repository.UserRepository;
-import org.erp.service.MemberService;
 import org.erp.service.ResponseService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-
 @Slf4j
-@Api(tags = {"1. Member"})
+@Api(tags = {"2. Member"})
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/member")
@@ -35,21 +33,39 @@ public class MemberController {
     public SingleResult<MemberModel> addToMember (@ApiParam(value = "조직원 이메일 ", required = true)
                                      @RequestParam String email,
                                      @ApiParam(value = "조직원 상태 ", required = true)
-                                     @RequestParam MemberStatusType memberStatusType,
-                                                  @ApiParam(value = "msrl ", required = true)
-                                                      @RequestParam(value = "msrl", defaultValue = "1") long msrl,
-                                                  @ApiParam(value = "memberId", required = true)
-                                                      @RequestParam(value = "memberId", defaultValue = "1") long memberId
+                                     @RequestParam MemberStatusType memberStatusType
                                      ) {
 
         MemberModel member = MemberModel.builder()
                 .memberEmail(email)
                 .memberStatus(memberStatusType)
-                .memberId(memberId)
-                // TODO 리팩토링필요 UserModel 연관관계
-                .userModel(UserModel.builder().msrl(msrl).email("emailtest").name("nametest").uid("uidtest").build())
+//                .userModel(UserModel.builder().userId("user1").build())
                 .build();
 
+
     return responseService.getSingleResult(memberRepository.save(member));
+
+    }
+
+    @ApiOperation(value = "조직원 조회", notes = "조직원 조회")
+    @GetMapping(value = "/listAll")
+    public ListResult<MemberModel> findAllMember() {
+        log.debug("");
+        return responseService.getListResult(memberRepository.findAll());
+    }
+
+//    @ApiImplicitParams({
+//            @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header")
+//    })
+    @GetMapping(value = "/listOne")
+    @ApiOperation(value = "조직원 단일 조회", notes = "조직원 단일 조회")
+    public SingleResult<MemberModel> findByMemberId(@ApiParam(value = "언어", defaultValue = "ko")
+                                                    @RequestParam String lang,
+                                                    @RequestParam String memberId) {
+
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String id = authentication.getName();
+
+        return responseService.getSingleResult(memberRepository.findByMemberId(memberId).orElseThrow(CustomMemberNotFoundException::new));
     }
 }

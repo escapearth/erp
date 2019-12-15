@@ -7,6 +7,11 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+/**
+* @author halfdev
+* @since 2019-12-15
+* Oauth2.0
+*/
 @Entity
 @Table(name = "user_connection")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -15,7 +20,7 @@ public class UserConnection {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long msrl;
+    private String userId;
 
     @Column(name = "email")
     private String email;
