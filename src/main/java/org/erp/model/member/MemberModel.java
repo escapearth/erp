@@ -78,7 +78,7 @@ public class MemberModel extends CommonDateEntity {
      * 조직원 상태
      */
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 1, columnDefinition ="char")
+    @Column(nullable = false, length = 1, columnDefinition ="CHAR")
     protected MemberStatusType memberStatus;
 
     /**

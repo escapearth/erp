@@ -66,6 +66,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 , "/social/**")
                 .permitAll()
 
+                // 로그인 후 Jwt Token 으로 확인
+                .antMatchers("/member/**").hasRole("USER")
+
                 .and()
 
                 .formLogin()
