@@ -42,9 +42,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.js",
                         "/h2-console/**", // h2-console 추후 삭제
                         "/swagger-resources/**",
-                        "/swagger-ui.html",
+                        "/swagger-ui.html/**",
                         "/webjars/**",
-                        "/swagger/**"
+                        "/swagger/**",
+                        "/h2-console/**"
         );
     }
 
@@ -61,14 +62,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
 
                 .authorizeRequests()
-                .antMatchers( "/sign/**"
-                , "/social/**")
-                .permitAll()
+                .antMatchers( "/sign/**").permitAll()
 
                 // 로그인 후 Jwt Token 으로 확인
                 // org.springframework.security.access.AccessDeniedException: Access is denied
                 // Signin -> ROLE_USER 상태로 권한 부여됨
                 .antMatchers("/member/**").hasRole("USER")
+//                .anyRequest().authenticated()
+
+                .and()
+
+                .apply(securityConfigurerAdapter())
 
                 .and()
 
