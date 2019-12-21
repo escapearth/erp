@@ -8,3 +8,6 @@
 - 부서 CRUD
 - 조직원 CRUD  
 swagger UI 접속방법: localhost:{port}/swagger-ui.html
+
+# ISSUE
+- JPA > UserModel과 MemberModel의 관계매핑이 
