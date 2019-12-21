@@ -6,6 +6,9 @@ server:
       enabled: true
 
 spring:
+  messages:
+    basename: i18n/exception
+    encoding: UTF-8
   security:
     user:
       name: test

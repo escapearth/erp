@@ -67,8 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 로그인 후 Jwt Token 으로 확인
                 // org.springframework.security.access.AccessDeniedException: Access is denied
                 // Signin -> ROLE_USER 상태로 권한 부여됨
-                .antMatchers("/member/**").hasRole("USER")
-//                .anyRequest().authenticated()
+//                .antMatchers("/member/**").hasRole("USER")
 
                 .and()
 

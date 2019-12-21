@@ -12,7 +12,6 @@ import org.erp.model.member.MemberModel;
 import org.erp.model.member.MemberStatusType;
 import org.erp.repository.MemberRepository;
 import org.erp.service.ResponseService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -58,10 +57,11 @@ public class MemberController {
 //            @ApiImplicitParam(name = "Authorization", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header")
 //    })
     @ApiOperation(value = "조직원 단일 조회", notes = "조직원 단일 조회")
-    @GetMapping(value = "/listOne")
+    @GetMapping(value = "/listOne/{memberId}")
     public SingleResult<MemberModel> findByMemberId(@ApiParam(value = "언어", defaultValue = "ko")
                                                     @RequestParam String lang,
-                                                    @RequestParam String memberId) {
+                                                    @ApiParam(value = "memberId", required = true)
+                                                    @PathVariable String memberId) {
 
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //        String id = authentication.getName();
