@@ -12,6 +12,8 @@ import org.erp.model.member.MemberModel;
 import org.erp.model.member.MemberStatusType;
 import org.erp.repository.MemberRepository;
 import org.erp.service.ResponseService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -23,7 +25,6 @@ public class MemberController {
 
     private final ResponseService responseService;
     private final MemberRepository memberRepository;
-    private final JwtTokenProvider jwtTokenProvider;
 
         @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header")
@@ -49,29 +50,26 @@ public class MemberController {
     @ApiOperation(value = "조직원 조회", notes = "조직원 조회")
     @GetMapping(value = "/listAll")
     public ListResult<MemberModel> findAllMember() {
-        log.debug("");
         return responseService.getListResult(memberRepository.findAll());
     }
 
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "Authorization", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header")
-//    })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header")
+    })
     @ApiOperation(value = "조직원 단일 조회", notes = "조직원 단일 조회")
-    @GetMapping(value = "/listOne/{memberId}")
+    @GetMapping(value = "/listOne")
     public SingleResult<MemberModel> findByMemberId(@ApiParam(value = "언어", defaultValue = "ko")
-                                                    @RequestParam String lang,
-                                                    @ApiParam(value = "memberId", required = true)
-                                                    @PathVariable String memberId) {
+                                                    @RequestParam String lang) {
 
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        String id = authentication.getName();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String id = authentication.getName();
 
-        return responseService.getSingleResult(memberRepository.findByMemberId(memberId).orElseThrow(CustomMemberNotFoundException::new));
+        return responseService.getSingleResult(memberRepository.findByMemberId(id).orElseThrow(CustomMemberNotFoundException::new));
     }
 
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "Authorization", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header")
-//    })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header")
+    })
     @ApiOperation(value = "조직원 수정", notes = "조직원 수정")
     @PutMapping(value = "/modified")
     public SingleResult<MemberModel> modifyMember(@ApiParam(value = "memberId", required = true)
@@ -90,9 +88,9 @@ public class MemberController {
         return responseService.getSingleResult(memberRepository.save(memberModel));
     }
 
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "Authorization", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header")
-//    })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header")
+    })
     @ApiOperation(value = "조직원 삭제", notes = "조직원 삭제")
     @PutMapping(value = "/delete/{memberId}")
     public CommonResult deleteMember(@ApiParam(value = "memberId", required = true)

@@ -48,7 +48,7 @@ public class JwtTokenProvider implements InitializingBean {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String createToken(/*Authentication authentication, boolean rememberMe,*/String userPk, List<String> roles) {
+    public String createToken(String userPk, List<String> roles) {
 
         Claims claims = Jwts.claims().setSubject(userPk);
         claims.put("roles", roles);
@@ -60,27 +60,9 @@ public class JwtTokenProvider implements InitializingBean {
                 .signWith(SignatureAlgorithm.HS256, base64Secret)
                 .compact();
 
-//        String authorities = authentication.getAuthorities().stream()
-//                .map(GrantedAuthority::getAuthority)
-//                .collect(Collectors.joining(","));
-//
-//        long now = (new Date()).getTime();
-//        Date validity;
-//        if (rememberMe) {
-//            validity = new Date(now + this.tokenValidityInMillisecondsForRememberMe);
-//        } else {
-//            validity = new Date(now + this.tokenValidityInMilliseconds);
-//        }
-//
-//        return Jwts.builder()
-//                .setSubject(authentication.getName())
-//                .claim(AUTHORITIES_KEY, authorities)
-//                .signWith(key, SignatureAlgorithm.HS512)
-//                .setExpiration(validity)
-//                .compact();
-
     }
 
+    // Jwt 토큰으로 인증 정보를 조회
     public Authentication getAuthentication(String token) {
 
         Claims claims = Jwts.parser()

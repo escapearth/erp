@@ -66,16 +66,13 @@ public class SignController {
                                        @ApiParam(value = "비밀번호", required = true)
                                        @RequestParam String password) {
 
-        try {
-            UserModel user = userRepository.findByUid(id).orElseThrow(CustomEmailSigninFailedException::new);
+       UserModel userModel = userRepository.findByUid(id).orElseThrow(CustomEmailSigninFailedException::new);
+       if (!passwordEncoder.matches(password, userModel.getPassword()))
+           throw new CustomEmailSigninFailedException();
 
-            if (!passwordEncoder.matches(password, user.getPassword())) {
-                throw new CustomEmailSigninFailedException();
-            }
-            return responseService.getSingleResult(jwtTokenProvider.createToken(String.valueOf(user.getUserId()), user.getRoles()));
-        } catch (AuthenticationException e) {
-            throw new BadCredentialsException("Invalid username/password");
-        }
+       return responseService.getSingleResult(
+               jwtTokenProvider.createToken(userModel.getUsername()
+                       , userModel.getRoles()));
     }
 
     @ApiOperation(value = "로그아웃", notes = "로그아웃")

@@ -23,7 +23,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenProvider jwtTokenProvider;
-//    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -45,14 +44,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/swagger-ui.html/**",
                         "/webjars/**",
                         "/swagger/**",
-                        "/h2-console/**"
+                        "/h2-console/**",
+                        "/v2/**"
         );
     }
 
     // Configure security settings
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtTokenProvider);
 
         http
                 .httpBasic().disable() // Rest API 이므로 기본설정을 안씀. 기본설정은 비인증시 Login 화면으로 Redirect
@@ -62,12 +61,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
 
                 .authorizeRequests()
-                .antMatchers( "/sign/**").permitAll()
+                .antMatchers( "/sign/**")
+                .permitAll()
 
-                // 로그인 후 Jwt Token 으로 확인
-                // org.springframework.security.access.AccessDeniedException: Access is denied
-                // Signin -> ROLE_USER 상태로 권한 부여됨
-//                .antMatchers("/member/**").hasRole("USER")
+                .anyRequest().hasRole("USER") // 그 외 요청은 ROLE_USER 만 가능
 
                 .and()
 
@@ -91,7 +88,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
 
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
     }
 

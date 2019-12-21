@@ -1,8 +1,6 @@
 package org.erp.exception;
 
-import io.swagger.models.auth.In;
 import lombok.RequiredArgsConstructor;
-import org.erp.config.MessageConfig;
 import org.erp.model.common.CommonResult;
 import org.erp.service.ResponseService;
 import org.springframework.context.MessageSource;
@@ -10,7 +8,6 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +29,12 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected CommonResult memberNotFoundException(HttpServletRequest request, CustomMemberNotFoundException e) {
         return responseService.getFailedResult(Integer.valueOf(getMessage("memberNotFound.code")), getMessage("memberNotFound.msg"));
+    }
+
+    @ExceptionHandler(CustomEmailSigninFailedException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected CommonResult emailSigninFailedException(HttpServletRequest request, CustomEmailSigninFailedException e) {
+        return responseService.getFailedResult(Integer.valueOf(getMessage("emailSigninFailed.code")), getMessage("emailSigninFailed.msg"));
     }
 
     private String getMessage(String code) {
