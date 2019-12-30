@@ -64,7 +64,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers( "/sign/**")
                 .permitAll()
 
-                .anyRequest().hasRole("USER") // 그 외 요청은 ROLE_USER 만 가능
+//                .anyRequest().hasRole("USER") // 그 외 요청은 ROLE_USER 만 가능
 
                 .and()
 
