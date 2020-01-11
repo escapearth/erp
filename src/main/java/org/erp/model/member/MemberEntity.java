@@ -3,57 +3,41 @@ package org.erp.model.member;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.erp.model.common.CommonDateEntity;
-import org.erp.model.user.UserModel;
+import org.erp.model.user.UserEntity;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
-@Data
 @Entity
-@Table(name = "MEMBERMODEL")
-@EqualsAndHashCode(callSuper = false, of = "memberId")
 @NoArgsConstructor
-@Cacheable
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class MemberModel extends CommonDateEntity {
-
-    @JsonIgnore
-    private static final long serialVersionUID = 1L;
+public class MemberEntity extends CommonDateEntity {
 
     /**
      * Member Id
      */
-    @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(columnDefinition = "CHAR(36)", updatable = false, nullable = false, unique = true, length = 36)
+    @Id @GeneratedValue
+    @Column(name = "member_id", columnDefinition = "CHAR(36)", updatable = false, length = 36)
     private String memberId;
 
     /**
-     * UserModel
+     * UserEntity
      */
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = false)
-    @JoinColumn(name = "userId", updatable = false)
-    private UserModel userModel;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", updatable = false)
+    private UserEntity userEntity;
 
     /**
      * Member 성명
      */
-    @Column(length = 255)
+    @Column(name = "member_name")
     private String memberName;
 
-    @Column(unique = true, nullable = false, length = 320)
+    @Column(nullable = false, length = 320)
     private String memberEmail;
 
     /**
@@ -71,7 +55,7 @@ public class MemberModel extends CommonDateEntity {
     /**
      * Member 주소
      */
-    @Column(length = 255)
+    @Column
     private String memberAddress;
 
     /**
@@ -85,7 +69,7 @@ public class MemberModel extends CommonDateEntity {
      * 조직원 이미지 주소
      */
     @Deprecated
-    @Column(length = 255)
+    @Column
     private String memberImage;
 
 }

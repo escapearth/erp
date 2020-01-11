@@ -10,4 +10,4 @@
 swagger UI 접속방법: localhost:{port}/swagger-ui.html
 
 # ISSUE
-- JPA > UserModel과 MemberModel의 관계매핑이 
+- JPA > UserModel과 MemberEntity의 관계매핑이 
