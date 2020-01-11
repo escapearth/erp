@@ -1,12 +1,11 @@
 package org.erp.model.member;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.erp.model.common.CommonDateEntity;
 import org.erp.model.user.UserEntity;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
@@ -27,8 +26,7 @@ public class MemberEntity extends CommonDateEntity {
     /**
      * UserEntity
      */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", updatable = false)
+    @OneToOne(mappedBy = "memberEntity")
     private UserEntity userEntity;
 
     /**
