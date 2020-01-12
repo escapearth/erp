@@ -37,6 +37,12 @@ public class ExceptionAdvice {
         return responseService.getFailedResult(Integer.valueOf(getMessage("emailSigninFailed.code")), getMessage("emailSigninFailed.msg"));
     }
 
+    @ExceptionHandler(UserAlreadyExistException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected CommonResult userAlreadyExistException(HttpServletRequest request, Exception e) {
+        return responseService.getFailedResult(Integer.valueOf(getMessage("userAlready.code")), getMessage("userAlready.msg"));
+    }
+
     private String getMessage(String code) {
         return getMessage(code, null);
     }

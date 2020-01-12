@@ -23,7 +23,7 @@ public class UserService {
 
     public UserEntity registerNewUserAccount(final LoginDTO accountDto) {
         if (emailExists(accountDto.getEmail())) {
-            throw new UserAlreadyExistException("There is an account with that email adress: " + accountDto.getEmail());
+            throw new UserAlreadyExistException("There is an account with that email address: " + accountDto.getEmail());
         }
 
         userRepository.save(UserEntity.builder()

@@ -11,8 +11,6 @@ import org.erp.jwt.JwtTokenProvider;
 import org.erp.model.common.CommonResult;
 import org.erp.model.common.SingleResult;
 import org.erp.model.dto.LoginDTO;
-import org.erp.model.member.MemberEntity;
-import org.erp.model.member.MemberStatusType;
 import org.erp.model.user.UserEntity;
 import org.erp.repository.UserRepository;
 import org.erp.service.ResponseService;
@@ -23,14 +21,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.WebRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.Optional;
 
 @Slf4j
 @Api(tags = {"1. Sign"})
@@ -50,13 +45,8 @@ public class SignController {
     @PostMapping(value = "api/v1/signup")
     public CommonResult registerUserAccount
             (@ModelAttribute("userEntities") @Valid LoginDTO accountDto,
-             BindingResult result,
-             @ApiParam(value = "회원 Email 계정 : 이메일", required = true)
-             @RequestParam String email,
-             @ApiParam(value = "비밀번호", required = true)
-             @RequestParam String password,
-             @ApiParam(value = "이름", required = true)
-             @RequestParam String name) {
+             BindingResult result
+             ) {
 
         log.debug("Registering user account with information: {}", accountDto);
 
@@ -69,14 +59,22 @@ public class SignController {
             result.rejectValue("email", "message.regError");
         }
 
-        userRepository.save(UserEntity.builder()
-                .email(email)
-                .password(passwordEncoder.encode(password))
-                .name(name)
-                .email(email)
-                .build());
-
         return responseService.getSuccessResult();
+    }
+
+
+    /**
+    * @author halfdev
+    * @since 2020-01-12
+    */
+    private UserEntity createUserAccount(LoginDTO accountDto, BindingResult result) {
+        UserEntity registered = null;
+        try {
+            registered = userService.registerNewUserAccount(accountDto);
+        } catch (EmailExistsException e) {
+            e.printStackTrace();
+        }
+        return registered;
     }
 
 
@@ -110,15 +108,5 @@ public class SignController {
         }
         log.debug("auth after: >>>> " + auth);
         SecurityContextHolder.getContext().setAuthentication(null);
-    }
-
-    private UserEntity createUserAccount(LoginDTO accountDto, BindingResult result) {
-        UserEntity registered = null;
-        try {
-            registered = userService.registerNewUserAccount(accountDto);
-        } catch (EmailExistsException e) {
-            e.printStackTrace();
-        }
-        return registered;
     }
 }
